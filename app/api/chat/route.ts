@@ -3,6 +3,7 @@ import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createClient } from "@/lib/supabase/server";
 import { CISO_SYSTEM_PROMPT } from "@/lib/ai/prompts";
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 // Select AI provider based on available API key
 function getModel() {
@@ -27,6 +28,16 @@ export async function POST(req: Request) {
 
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
+    }
+
+    // Rate limit check
+    const rateLimit = await checkRateLimit(
+      supabase,
+      `chat:${user.id}`,
+      RATE_LIMITS.chat
+    );
+    if (!rateLimit.allowed) {
+      return rateLimitResponse(rateLimit);
     }
 
     // If interviewId is provided, verify ownership

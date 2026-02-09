@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generatePolicy, extractComplianceItems } from "@/lib/ai/policy-generator";
+import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import type { Interview, Message, Policy, ComplianceStatus } from "@/types/database";
 
 interface InterviewWithOrg extends Interview {
@@ -31,6 +32,16 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limit check
+    const rateLimit = await checkRateLimit(
+      supabase,
+      `policy-generate:${user.id}`,
+      RATE_LIMITS.policyGenerate
+    );
+    if (!rateLimit.allowed) {
+      return rateLimitResponse(rateLimit);
     }
 
     // Fetch the interview and verify ownership

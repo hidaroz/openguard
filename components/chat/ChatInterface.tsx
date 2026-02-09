@@ -134,7 +134,9 @@ export function ChatInterface({
       {error && (
         <div className="px-6 py-3 bg-destructive/10 border-t border-destructive/20">
           <p className="text-sm text-destructive text-center">
-            Something went wrong. Please try again.
+            {error.message?.includes("429") || error.message?.includes("Too many requests")
+              ? "You're sending messages too quickly. Please wait a few minutes before trying again."
+              : "Something went wrong. Please try again."}
           </p>
         </div>
       )}

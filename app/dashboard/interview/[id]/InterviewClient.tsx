@@ -63,6 +63,15 @@ export function InterviewClient({
         body: JSON.stringify({ interviewId: interview.id }),
       });
 
+      if (response.status === 429) {
+        const body = await response.json();
+        const retryMinutes = Math.ceil((body.retryAfter || 60) / 60);
+        toast.error(
+          `Rate limit reached. Please wait ${retryMinutes} minute${retryMinutes !== 1 ? "s" : ""} before trying again.`
+        );
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to generate policy");
       }
