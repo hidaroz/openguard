@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpenGuard
+
+AI-Powered Fractional CISO for Non-Profits and Community Organizations.
+
+OpenGuard interviews your organization through a friendly conversation and generates a custom, plain-English cybersecurity and privacy policy that you can actually use.
+
+## Features
+
+- **Conversational Assessment**: No confusing forms—answer simple questions in plain English
+- **Custom Policy Generation**: Get a comprehensive, board-ready security policy tailored to your needs
+- **Compliance Tracking**: Prioritized action items with status tracking
+- **PDF Export**: Download your policy as a professional document
+- **Multi-Provider AI**: Supports OpenAI and Anthropic models
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, TypeScript)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Auth
+- **AI**: Vercel AI SDK (multi-provider support)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js 18+
+- npm or yarn
+- Supabase account
+- OpenAI or Anthropic API key
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/openguard.git
+   cd openguard
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   
+   Edit `.env.local` with your credentials:
+   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anon key
+   - `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`: Your AI provider API key
+
+4. Set up the database:
+   - Go to your Supabase dashboard
+   - Navigate to SQL Editor
+   - Run the migration in `supabase/migrations/00001_initial_schema.sql`
+
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
+
+```
+openguard/
+├── app/                    # Next.js App Router pages
+│   ├── (auth)/            # Authentication pages
+│   ├── (dashboard)/       # Protected dashboard pages
+│   └── api/               # API routes
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   ├── chat/             # Chat interface components
+│   ├── dashboard/        # Dashboard components
+│   └── policy/           # Policy viewer components
+├── lib/                   # Utility functions
+│   ├── supabase/         # Supabase client configuration
+│   └── ai/               # AI prompts and generators
+├── types/                 # TypeScript type definitions
+└── supabase/             # Database migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key |
+| `OPENAI_API_KEY` | OpenAI API key (optional if using Anthropic) |
+| `ANTHROPIC_API_KEY` | Anthropic API key (optional if using OpenAI) |
+| `NEXT_PUBLIC_APP_URL` | Your app's public URL |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+### Vercel (Recommended)
 
-To learn more about Next.js, take a look at the following resources:
+1. Push your code to GitHub
+2. Import the project in Vercel
+3. Add environment variables
+4. Deploy!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Other Platforms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app can be deployed to any platform that supports Next.js:
+- Docker
+- AWS Amplify
+- Netlify
+- Railway
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions are welcome! Please read our contributing guidelines before submitting a PR.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT License - see LICENSE file for details.
+
+## Support
+
+For questions or support, please open an issue on GitHub.
