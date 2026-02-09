@@ -25,7 +25,7 @@ function checkAuthRateLimit(ip: string): boolean {
   return true;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Clean up expired rate-limit entries on each invocation
   const now = Date.now();
   for (const [ip, entry] of ipHits) {
