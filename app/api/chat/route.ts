@@ -116,10 +116,10 @@ export async function POST(req: Request) {
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
+    // The detail stays in the server log. Returning error.message to the
+    // caller leaked provider errors, and with them model names, prompt
+    // fragments and occasionally upstream request ids.
     console.error("Chat API error:", error);
-    return new Response(
-      error instanceof Error ? error.message : "Internal server error",
-      { status: 500 }
-    );
+    return new Response("Internal server error", { status: 500 });
   }
 }
