@@ -1,3 +1,9 @@
+> **Stale.** This was written on 2026-02-08 before the repo was pushed, and
+> parts of it are now wrong -- it claims one commit and no remote, and it claims
+> "no sensitive data leaked in error responses" which was not true at the time
+> (see the Fixed section of SECURITY.md). Kept as a point-in-time snapshot.
+> SECURITY.md is the current statement of security posture.
+
 # OpenGuard - Project Progress Report
 
 **Date:** February 8, 2026

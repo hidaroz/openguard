@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { marked } from "marked";
+import DOMPurify from "isomorphic-dompurify";
+
+/** Escape a value interpolated into HTML text or an attribute. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 import { checkRateLimit, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function GET(req: Request) {
@@ -56,8 +67,12 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // Convert markdown to HTML
-    const htmlContent = await marked(policy.content_markdown);
+    // marked passes raw HTML in the source through untouched, and this
+    // document is served as text/html on the app origin -- so a <script> that
+    // survived into content_markdown would run with the session cookie in
+    // scope. The content is model-generated from user-supplied interview
+    // answers, which is exactly the untrusted path.
+    const htmlContent = DOMPurify.sanitize(await marked(policy.content_markdown));
 
     // Create a printable HTML document
     const html = `
@@ -66,7 +81,7 @@ export async function GET(req: Request) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${policy.title}</title>
+  <title>${escapeHtml(policy.title)}</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
@@ -227,9 +242,9 @@ export async function GET(req: Request) {
 </head>
 <body>
   <div class="header">
-    <h1>${policy.title}</h1>
+    <h1>${escapeHtml(policy.title)}</h1>
     <p class="meta">
-      ${policy.organizations.name} • Version ${policy.version} • Generated ${new Date(policy.generated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+      ${escapeHtml(policy.organizations.name)} • Version ${escapeHtml(String(policy.version))} • Generated ${new Date(policy.generated_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
     </p>
   </div>
   

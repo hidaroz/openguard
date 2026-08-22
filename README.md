@@ -33,7 +33,7 @@ OpenGuard interviews your organization through a friendly conversation and gener
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/openguard.git
+   git clone https://github.com/hidaroz/openguard.git
    cd openguard
    ```
 
